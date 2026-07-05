@@ -1,16 +1,12 @@
-import { siteConfig } from '../config';
+const STORAGE_KEY = 'safari-trasa.known.v1';
 
-export function questionKey(topic: string, question: string): string {
-    return `${topic}\u0000${question}`;
-}
-
-export function storageKey(): string {
-    return siteConfig.storageKey;
+export function questionKey(place: string, question: string): string {
+    return `${place}\u0000${question}`;
 }
 
 export function loadKnownSet(): Set<string> {
     try {
-        const raw = localStorage.getItem(storageKey());
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return new Set();
         const parsed = JSON.parse(raw) as unknown;
         if (!Array.isArray(parsed)) return new Set();
@@ -21,5 +17,5 @@ export function loadKnownSet(): Set<string> {
 }
 
 export function saveKnownSet(known: Set<string>): void {
-    localStorage.setItem(storageKey(), JSON.stringify([...known]));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...known]));
 }

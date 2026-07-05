@@ -1,35 +1,33 @@
 import questionsData from '../data/questions.json';
 import { useKnownQuestion, useKnownSet, type KnownFilter } from '../hooks/useKnownQuestion';
 import { questionKey } from '../lib/knownStorage';
-import { openGoogleHint, type TopicQuestions } from '../lib/googleHint';
+import { openGoogleHint, type PlaceQuestions } from '../lib/googleHint';
 import { KnownCheckbox } from './KnownCheckbox';
 
-const questions = questionsData as TopicQuestions[];
+const questions = questionsData as PlaceQuestions[];
 
 export const TOTAL_QUESTIONS = questions.reduce(
-    (sum, topic) => sum + Object.values(topic.categories).reduce((s, qs) => s + qs.length, 0),
+    (sum, place) => sum + Object.values(place.categories).reduce((s, qs) => s + qs.length, 0),
     0,
 );
 
-export const TOPIC_NAMES = questions.map((t) => t.name);
-
 type QuestionsViewProps = {
-    focusTopicName?: string | null;
+    focusPlaceName?: string | null;
     knownFilter?: KnownFilter;
 };
 
-export function QuestionsView({ focusTopicName, knownFilter = 'all' }: QuestionsViewProps) {
+export function QuestionsView({ focusPlaceName, knownFilter = 'all' }: QuestionsViewProps) {
     const knownSet = useKnownSet();
 
-    const topics = focusTopicName ? questions.filter((t) => t.name === focusTopicName) : questions;
+    const places = focusPlaceName ? questions.filter((p) => p.name === focusPlaceName) : questions;
 
-    const filteredTopics = topics
-        .map((topic) => {
+    const filteredPlaces = places
+        .map((place) => {
             const categories = Object.fromEntries(
-                Object.entries(topic.categories)
+                Object.entries(place.categories)
                     .map(([category, items]) => {
                         const filtered = items.filter((question) => {
-                            const isKnown = knownSet.has(questionKey(topic.name, question));
+                            const isKnown = knownSet.has(questionKey(place.name, question));
                             if (knownFilter === 'known') return isKnown;
                             if (knownFilter === 'unknown') return !isKnown;
                             return true;
@@ -38,11 +36,11 @@ export function QuestionsView({ focusTopicName, knownFilter = 'all' }: Questions
                     })
                     .filter(([, items]) => items.length > 0),
             );
-            return { ...topic, categories };
+            return { ...place, categories };
         })
-        .filter((topic) => Object.keys(topic.categories).length > 0);
+        .filter((place) => Object.keys(place.categories).length > 0);
 
-    if (filteredTopics.length === 0) {
+    if (filteredPlaces.length === 0) {
         return (
             <p className="empty-state">
                 {knownFilter === 'known' && 'Brak pytań oznaczonych jako „Umiem”.'}
@@ -54,15 +52,15 @@ export function QuestionsView({ focusTopicName, knownFilter = 'all' }: Questions
 
     return (
         <div className="questions-view">
-            {filteredTopics.map((topic) => (
-                <section key={topic.name} id={slugify(topic.name)} className="topic-section">
-                    <h2>{topic.name}</h2>
-                    {Object.entries(topic.categories).map(([category, items]) => (
+            {filteredPlaces.map((place) => (
+                <section key={place.name} id={slugify(place.name)} className="place-section">
+                    <h2>{place.name}</h2>
+                    {Object.entries(place.categories).map(([category, items]) => (
                         <div key={category} className="category-block">
                             <h3>{category}</h3>
                             <ol>
                                 {items.map((question) => (
-                                    <QuestionItem key={question} topic={topic.name} question={question} />
+                                    <QuestionItem key={question} place={place.name} question={question} />
                                 ))}
                             </ol>
                         </div>
@@ -73,20 +71,20 @@ export function QuestionsView({ focusTopicName, knownFilter = 'all' }: Questions
     );
 }
 
-function QuestionItem({ topic, question }: { topic: string; question: string }) {
-    const { isKnown } = useKnownQuestion(topic, question);
+function QuestionItem({ place, question }: { place: string; question: string }) {
+    const { isKnown } = useKnownQuestion(place, question);
 
     return (
         <li className={`question-item${isKnown ? ' question-item--known' : ''}`}>
             <span className="question-text">{question}</span>
             <div className="question-actions">
-                <KnownCheckbox topic={topic} question={question} />
+                <KnownCheckbox place={place} question={question} />
                 <button
                     type="button"
                     className="question-hint-btn"
                     aria-label="Szukaj tego pytania w Google (nowa karta)"
                     title="Szukaj tego pytania w Google (nowa karta)"
-                    onClick={() => openGoogleHint(topic, question)}
+                    onClick={() => openGoogleHint(place, question)}
                 >
                     <HintIcon />
                     <span>Podpowiedź</span>
@@ -124,6 +122,6 @@ function slugify(name: string): string {
         .replace(/^-|-$/g, '');
 }
 
-export function scrollToTopic(name: string): void {
+export function scrollToPlace(name: string): void {
     document.getElementById(slugify(name))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
