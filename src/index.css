@@ -1,0 +1,313 @@
+:root {
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #ddd;
+    --accent: #2563eb;
+    --hint: #ea580c;
+    --hint-dim: #c2410c;
+    --known: #16a34a;
+    --known-dim: #15803d;
+    --known-bg: #f0fdf4;
+    --known-border: #86efac;
+    --bg: #fafafa;
+    --panel: #fff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+.app-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.app-subtitle {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-family: system-ui, sans-serif;
+}
+
+.known-progress {
+    color: var(--known);
+    font-weight: 600;
+}
+
+.questions-panel {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.25rem;
+}
+
+.filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    font-family: system-ui, sans-serif;
+    font-size: 0.9rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+}
+
+.filter-group--topic {
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--border);
+}
+
+.filter-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+}
+
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.filter-pill.active {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+}
+
+.filter-pill--known.active {
+    border-color: var(--known);
+    background: var(--known);
+}
+
+.filter-pill--unknown.active {
+    border-color: #d97706;
+    background: #d97706;
+}
+
+.filter-pill__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.12);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.filter-pill.active .filter-pill__count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.topic-select {
+    flex: 1;
+    min-width: 12rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.88rem;
+    background: var(--bg);
+}
+
+.topic-section + .topic-section {
+    margin-top: 2.5rem;
+}
+
+.topic-section h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.35rem;
+}
+
+.category-block + .category-block {
+    margin-top: 1.25rem;
+}
+
+.category-block h3 {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-family: system-ui, sans-serif;
+}
+
+.category-block ol {
+    margin: 0;
+    padding-left: 1.35rem;
+}
+
+.question-item {
+    margin-bottom: 1.1rem;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.question-item--known {
+    border-color: var(--known-border);
+    background: var(--known-bg);
+    box-shadow: inset 3px 0 0 var(--known);
+}
+
+.question-text {
+    display: block;
+    margin-bottom: 0.65rem;
+}
+
+.question-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.known-check {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.75rem;
+    min-height: 40px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--muted);
+    font: 600 0.85rem system-ui, sans-serif;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.known-check:hover {
+    border-color: #bbf7d0;
+}
+
+.known-check--on {
+    border-color: var(--known);
+    background: var(--known);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
+}
+
+.known-check--on:hover {
+    background: var(--known-dim);
+    border-color: var(--known-dim);
+}
+
+.known-check__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.known-check__box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 4px;
+    border: 2px solid currentColor;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.known-check--on .known-check__box {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.known-check__icon {
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.known-check--on .known-check__icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.known-check__label {
+    line-height: 1;
+}
+
+.question-hint-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.85rem;
+    min-height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: var(--hint);
+    color: #fff;
+    font: 600 0.85rem system-ui, sans-serif;
+    cursor: pointer;
+}
+
+.question-hint-btn:hover {
+    background: var(--hint-dim);
+}
+
+.empty-state {
+    font-family: system-ui, sans-serif;
+    color: var(--muted);
+}
